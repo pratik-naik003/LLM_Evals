@@ -805,3 +805,484 @@ For an AI application, evaluate:
 
 
 ![Project Screenshot](image.png)
+
+
+# 📊 LLM Application Evaluation Workflow 
+
+## 🤔 Why Do We Evaluate an LLM Application?
+
+Before deploying an LLM application, we must verify that it works correctly.
+
+Evaluation helps us to:
+
+- 📈 Measure performance
+- 🐞 Find mistakes
+- 🚀 Improve the system
+- ✅ Deploy a reliable application
+
+---
+
+# 💡 Example
+
+Suppose you work at **Zomato**.
+
+Customers send thousands of emails every day.
+
+You build an **LLM application** that automatically classifies each email into one of the following categories:
+
+- Billing
+- Technical
+- General
+
+### Example
+
+| Email | Category |
+|-------|----------|
+| My card was charged twice | Billing |
+| App crashes on login | Technical |
+| What are your working hours? | General |
+
+After classification:
+
+```
+Billing Emails
+        │
+        ▼
+ Billing Team
+
+Technical Emails
+        │
+        ▼
+Technical Team
+
+General Emails
+        │
+        ▼
+Customer Support
+```
+
+Before deploying this application, we must evaluate it.
+
+---
+
+# ✅ Step 1: Define the Task
+
+The first step is to define **what you want to evaluate**.
+
+### Example
+
+**Task:** Email Classification
+
+**Goal:**
+
+> Check whether the LLM classifies customer emails into the correct category.
+
+---
+
+# ✅ Step 2: Define Success Criteria
+
+Now decide:
+
+> **How will you know the application is performing well?**
+
+For a classification problem, the most common evaluation metric is:
+
+## Accuracy
+
+### Formula
+
+```text
+Accuracy = Correct Predictions / Total Predictions
+```
+
+### Example
+
+```
+Total Emails Tested = 100
+
+Correct Predictions = 90
+
+Accuracy = 90%
+```
+
+---
+
+# ✅ Step 3: Build a Golden Evaluation Dataset
+
+Create a manually labeled dataset.
+
+| Email | Correct Label |
+|-------|---------------|
+| My card was charged twice | Billing |
+| App crashes on login | Technical |
+| What are your working hours? | General |
+
+A good evaluation dataset should:
+
+- Contain **50–500 examples**
+- Be manually labeled
+- Preferably come from real customer data
+- Cover edge cases
+
+This dataset is called the **Golden Dataset**.
+
+### Definition
+
+> **Golden Dataset:** A manually labeled dataset that acts as the ground truth for evaluating an LLM application.
+
+---
+
+# ✅ Step 4: Choose an Evaluation Method
+
+Now decide **who will evaluate the model.**
+
+There are three common methods.
+
+---
+
+## 1️⃣ Automated Evaluation
+
+The evaluation is performed using code.
+
+Best suited for:
+
+- Classification
+- Regression
+- Numeric outputs
+
+### Example
+
+```python
+Prediction == Ground Truth
+```
+
+Python compares the predicted labels with the actual labels and calculates metrics such as Accuracy.
+
+### Advantages
+
+- Fast
+- Cheap
+- Repeatable
+
+---
+
+## 2️⃣ Human Evaluation
+
+Humans manually review the model's outputs.
+
+Useful for:
+
+- Creative writing
+- Long-form answers
+- Chatbots
+- Subjective tasks
+
+### Drawbacks
+
+- Expensive
+- Time-consuming
+- Difficult to scale
+
+---
+
+## 3️⃣ LLM-as-a-Judge
+
+Another LLM evaluates the generated output.
+
+Useful for:
+
+- Long answers
+- Semantic similarity
+- Comparing multiple responses
+
+### Advantages
+
+- Faster than humans
+- Lower cost
+
+### Limitation
+
+Not always perfectly reliable.
+
+---
+
+# ✅ Step 5: Run the Model
+
+Pass every example from the Golden Dataset into your application.
+
+### Example
+
+**Input**
+
+```
+My card was charged twice
+```
+
+↓
+
+**Prediction**
+
+```
+Billing
+```
+
+Repeat this process for every example in the evaluation dataset.
+
+---
+
+# ✅ Step 6: Evaluate Results
+
+Compare:
+
+- Expected Output
+- Predicted Output
+
+Then calculate evaluation metrics.
+
+### Example
+
+```
+100 Emails Tested
+
+80 Correct Predictions
+
+Accuracy = 80%
+```
+
+---
+
+## 🔍 Analyze Errors
+
+Do not stop after calculating Accuracy.
+
+Instead, ask:
+
+> **Why did the model make mistakes?**
+
+Possible reasons:
+
+- Bad Prompt
+- Weak LLM
+- Poor Instructions
+- Confusing Categories
+- Low-Quality Data
+
+Error analysis is one of the most important parts of evaluation.
+
+---
+
+# ✅ Step 7: Improve the System
+
+Based on the identified errors, improve your application.
+
+Possible improvements:
+
+- Better Prompt
+- Better LLM
+- Better Workflow
+- Better Data
+- Better Retrieval
+
+### Example
+
+```
+Old Accuracy = 80%
+
+↓
+
+Improve Prompt
+
+↓
+
+Accuracy = 90%
+
+↓
+
+Switch to Better Model
+
+↓
+
+Accuracy = 95%
+```
+
+---
+
+# ✅ Step 8: Repeat the Process
+
+LLM Evaluation is **iterative**.
+
+It is not a one-time activity.
+
+```
+Build Dataset
+      ↓
+Run Model
+      ↓
+Evaluate
+      ↓
+Analyze Errors
+      ↓
+Improve System
+      ↓
+Run Again
+```
+
+Repeat this cycle until the performance is good enough for deployment.
+
+---
+
+# ✅ Step 9: Deploy and Monitor
+
+Once you are satisfied with the evaluation results,
+
+Deploy the application.
+
+However,
+
+Evaluation does **not** stop after deployment.
+
+---
+
+# 📈 Production Monitoring
+
+Real users may provide new and unexpected inputs.
+
+### Example
+
+A Billing email is mistakenly classified as Technical.
+
+The Technical Team reports the issue.
+
+What should you do?
+
+- Add the failed example to the Golden Dataset.
+- Improve the application.
+- Run evaluation again.
+
+Over time,
+
+Your Golden Dataset keeps growing and your application becomes more reliable.
+
+---
+
+# 🔄 Complete Workflow
+
+```text
+Define Task
+      ↓
+Define Success Criteria
+      ↓
+Build Golden Dataset
+      ↓
+Choose Evaluation Method
+      ↓
+Run Model
+      ↓
+Evaluate Results
+      ↓
+Analyze Errors
+      ↓
+Improve System
+      ↓
+Repeat
+      ↓
+Deploy
+      ↓
+Monitor Production
+      ↓
+Add New Failures to Dataset
+      ↓
+Repeat Evaluation
+```
+
+---
+
+# 🏗️ One Application Can Have Multiple Evaluations
+
+A single LLM application often requires multiple evaluations.
+
+### Example: RAG System
+
+Possible evaluations include:
+
+- Retriever Performance
+- Embedding Model Quality
+- Reranker Performance
+- Answer Quality
+- End-to-End Workflow
+- Latency
+- Cost
+- Groundedness
+
+Each component may require its own evaluation strategy.
+
+---
+
+# 📖 Key Terms
+
+| Term | Meaning |
+|------|---------|
+| **Task** | What the model is expected to do |
+| **Success Criteria** | Condition used to determine success |
+| **Metric** | Numerical measure of performance (e.g., Accuracy) |
+| **Golden Dataset** | Manually labeled evaluation dataset |
+| **Automated Evaluation** | Evaluation performed using code |
+| **Human Evaluation** | Evaluation performed by humans |
+| **LLM-as-a-Judge** | Another LLM evaluates the outputs |
+| **Production Monitoring** | Monitoring application performance after deployment |
+| **Iterative Evaluation** | Continuously improving and re-evaluating the system |
+
+---
+
+# 📝 Quick Revision
+
+✅ Evaluate before deployment.
+
+✅ Define the task.
+
+✅ Define the success metric.
+
+✅ Create a Golden Dataset.
+
+✅ Choose an evaluation method.
+
+- Automated Evaluation
+- Human Evaluation
+- LLM-as-a-Judge
+
+✅ Run the model.
+
+✅ Calculate evaluation metrics.
+
+✅ Analyze mistakes.
+
+✅ Improve the prompt, model, or workflow.
+
+✅ Repeat the evaluation cycle.
+
+✅ Deploy the application.
+
+✅ Monitor production continuously.
+
+✅ Add new failures to the Golden Dataset.
+
+✅ Re-evaluate and improve again.
+
+---
+
+# 🎯 Final Takeaway
+
+> **LLM Evaluation is a continuous process, not a one-time task.**
+
+A reliable LLM application is built by repeatedly:
+
+- Evaluating
+- Measuring
+- Learning from mistakes
+- Improving
+- Deploying with confidence
+
+This iterative workflow is the standard approach followed by modern AI teams to build **production-ready LLM applications**.
+
+
+![Project Screenshot](image3.png)
