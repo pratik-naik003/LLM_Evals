@@ -1286,3 +1286,585 @@ This iterative workflow is the standard approach followed by modern AI teams to 
 
 
 ![Project Screenshot](image3.png)
+
+
+# 📚 LLM Evaluations – Multiple Evaluation Pipelines 
+
+> **Goal:** Understand why a single LLM application requires multiple evaluation pipelines and why evaluating only the final answer is not enough.
+
+---
+
+# 📖 Recap
+
+In the previous lecture, we learned:
+
+- Why LLM Evaluations are important
+- What LLM Evaluations are
+- Types of Evaluations
+  - Model Evaluation
+  - Application Evaluation
+- Basic Evaluation Workflow
+
+---
+
+# 🎯 Today's Question
+
+> **Why does one LLM application need multiple evaluation pipelines?**
+
+---
+
+# 🤔 Why Multiple Evaluation Pipelines?
+
+There are **two major reasons**:
+
+1. Multiple Failure Points
+2. Multiple Risk Categories
+
+---
+
+# 1️⃣ Multiple Failure Points
+
+An LLM application consists of many components.
+
+Each component can fail independently.
+
+```text
+        User Query
+             │
+             ▼
+        Retriever
+             │
+             ▼
+   Retrieved Documents
+             │
+             ▼
+      Generator (LLM)
+             │
+             ▼
+       Final Answer
+```
+
+Possible failure points:
+
+- Retriever
+- Generator
+- Entire Workflow
+- Application Performance
+
+Each component requires its own evaluation pipeline.
+
+---
+
+# 📚 Example: RAG Chatbot
+
+A Retrieval-Augmented Generation (RAG) chatbot has two major components.
+
+---
+
+## 🔍 Retriever
+
+### Responsibilities
+
+- Receive the user query
+- Search the vector database
+- Retrieve the most relevant documents
+
+```text
+User Query
+      │
+      ▼
+ Retriever
+      │
+      ▼
+Top-K Relevant Documents
+```
+
+---
+
+## 🤖 Generator (LLM)
+
+### Responsibilities
+
+- Receive the query
+- Receive retrieved documents
+- Generate the final response
+
+```text
+Query + Retrieved Context
+           │
+           ▼
+         LLM
+           │
+           ▼
+     Final Response
+```
+
+---
+
+# 🚨 Failure Point 1: Retriever
+
+The Retriever may:
+
+- Retrieve incorrect documents
+- Miss important documents
+- Return irrelevant context
+
+Evaluation checks:
+
+- Are the retrieved documents relevant?
+- Did it retrieve the correct information?
+
+### Common Metrics
+
+- Context Relevance
+- Retriever Recall
+
+---
+
+# 🚨 Failure Point 2: Generator
+
+The Generator may:
+
+- Ignore the retrieved context
+- Hallucinate facts
+- Add extra information
+
+Evaluation checks:
+
+- Is the answer based only on retrieved documents?
+- Did the model invent new facts?
+
+### Important Metrics
+
+- Faithfulness
+- Groundedness
+
+---
+
+# 📌 Faithfulness (Groundedness)
+
+### Definition
+
+> The generated answer should contain **only information available in the retrieved context.**
+
+---
+
+## Example
+
+### Retrieved Context
+
+```
+Machine Learning Course Duration = 3 Weeks
+```
+
+---
+
+### ✅ Correct Answer
+
+```
+Machine Learning course duration is 3 weeks.
+```
+
+---
+
+### ❌ Incorrect Answer
+
+```
+Machine Learning course duration is 3 weeks.
+
+Python course duration is 4 weeks.
+
+It is an excellent course.
+```
+
+Everything after the first sentence is **hallucination** because it does not exist in the retrieved documents.
+
+---
+
+# 💡 Important Observation
+
+Suppose:
+
+- Retriever works correctly.
+- Generator works correctly.
+
+Does that guarantee the application works correctly?
+
+## Answer
+
+**No.**
+
+---
+
+# ❓ Why?
+
+Consider the following example.
+
+User asks:
+
+> **"What is the duration of the Machine Learning course?"**
+
+The Retriever returns:
+
+```text
+D1 → Python Course
+D2 → Random Document
+D3 → Random Document
+D4 → Random Document
+D5 → ML Course Duration = 8 Weeks
+```
+
+The Retriever succeeded because the correct document (D5) is present.
+
+However,
+
+The Generator focuses on D1 instead of D5.
+
+D1 says:
+
+```
+Python Course Duration = 6 Weeks
+```
+
+Final Answer:
+
+```
+Machine Learning course duration is 6 weeks.
+```
+
+Wrong answer.
+
+---
+
+# 🤔 Did the Retriever Fail?
+
+❌ No.
+
+The correct document was successfully retrieved.
+
+---
+
+# 🤔 Did the Generator Fail?
+
+Not exactly.
+
+It simply generated an answer using the higher-priority documents.
+
+---
+
+# 🚨 Then Why Did the System Fail?
+
+Because the **interaction between the Retriever and Generator failed.**
+
+Individually,
+
+- Retriever ✔️
+- Generator ✔️
+
+Together,
+
+❌ Wrong Output
+
+---
+
+# 🔄 Workflow-Level Evaluation
+
+We need another evaluation pipeline.
+
+```text
+Retriever
+      +
+Generator
+      │
+      ▼
+Entire Workflow
+```
+
+Workflow Evaluation checks:
+
+- Do components work well together?
+- Is the final answer correct?
+- Is document ordering affecting the answer?
+
+---
+
+# 💡 Solution
+
+Use a **Re-ranker**.
+
+```text
+Retriever
+      │
+      ▼
+Retrieved Documents
+      │
+      ▼
+Re-ranker
+      │
+      ▼
+Best Documents First
+      │
+      ▼
+Generator
+```
+
+Now,
+
+The most relevant document appears first.
+
+The Generator is more likely to produce the correct answer.
+
+---
+
+# 🤔 Is Workflow Evaluation Enough?
+
+Again,
+
+**No.**
+
+Suppose:
+
+- Retriever works
+- Generator works
+- Workflow works
+
+The application can still fail.
+
+---
+
+# 📌 Example
+
+Everything is correct.
+
+But the response takes:
+
+```
+10 Seconds
+```
+
+Users will leave.
+
+Even though the answers are correct,
+
+The application is **not production-ready.**
+
+---
+
+# 🌐 Application-Level Evaluation
+
+Application Evaluation measures the overall performance of the system.
+
+Important Metrics:
+
+- Latency
+- Cost
+- Reliability
+- User Experience
+
+---
+
+# 🏗️ Three Levels of LLM Evaluations
+
+---
+
+# 1️⃣ Component-Level Evaluation
+
+Evaluate every individual component separately.
+
+Examples:
+
+- Retriever
+- Generator
+- Embedding Model
+- Re-ranker
+- Vector Database
+- Prompt
+- Output Parser
+- Memory
+- Guardrails
+- Tool Selector
+
+---
+
+# 2️⃣ Workflow-Level Evaluation
+
+Evaluate how multiple components work together.
+
+Examples:
+
+- Retriever + Generator
+- RAG Pipeline
+- Multi-Agent Workflow
+- Chatbot Workflow
+
+---
+
+# 3️⃣ Application-Level Evaluation
+
+Evaluate the complete production application.
+
+Examples:
+
+- Latency
+- Token Cost
+- Reliability
+- Time To First Token (TTFT)
+- User Experience
+
+---
+
+# 🚨 Second Reason for Multiple Evaluations
+
+Besides multiple failure points,
+
+there are also **multiple risk categories.**
+
+Different evaluations measure different types of risks.
+
+---
+
+# 📂 Three Risk Categories
+
+```text
+Risk Categories
+      │
+      ├── Application Quality
+      ├── Safety
+      └── Operations
+```
+
+---
+
+# 1️⃣ Application Quality
+
+Measures whether the application performs its task correctly.
+
+Questions:
+
+- Is the answer correct?
+- Is it relevant?
+- Is it complete?
+- Did it follow instructions?
+
+---
+
+## General Metrics
+
+- Correctness
+- Accuracy
+- Relevance
+- Completeness
+- Instruction Following
+
+---
+
+## RAG-Specific Metrics
+
+- Context Relevance
+- Retriever Recall
+- Groundedness
+- Faithfulness
+- Citation Accuracy
+
+---
+
+## Agent-Specific Metrics
+
+- Tool Selection
+- Parameter Correctness
+- Task Completion
+- Error Recovery
+
+---
+
+## Multi-turn Chatbot Metrics
+
+- Context Retention
+- Clarification Behaviour
+
+---
+
+# 2️⃣ Safety
+
+Safety Evaluation ensures the model is safe for users.
+
+Checks include:
+
+- Toxicity
+- Harmful Content
+- Bias
+- Privacy Leakage
+- Prompt Injection
+- Jailbreak Resistance
+
+---
+
+## Example
+
+A chatbot should **never reveal**:
+
+- Credit Card Numbers
+- Phone Numbers
+- Passwords
+- Private User Information
+
+---
+
+# 3️⃣ Operations
+
+Operations Evaluation measures production performance.
+
+Common Metrics:
+
+- Latency
+- Cost per Request
+- Token Efficiency
+- Failure Rate
+- Latency Under Load
+
+---
+
+# 🏛️ Final Architecture
+
+```text
+                    LLM Application
+                           │
+     ┌─────────────────────┼─────────────────────┐
+     │                     │                     │
+     ▼                     ▼                     ▼
+Component Eval       Workflow Eval      Application Eval
+     │                     │                     │
+Retriever          Retriever + LLM      Latency
+Generator          Agent Workflow       Cost
+Prompt             RAG Pipeline         Reliability
+Embedding          Multi-turn Chat      User Experience
+Re-ranker
+Memory
+Guardrails
+```
+
+---
+
+# 📝 Key Takeaways
+
+- One LLM application requires **multiple evaluation pipelines**.
+- Different components fail in different ways.
+- Component success **does not guarantee** workflow success.
+- Workflow success **does not guarantee** application success.
+- Evaluate at three different levels:
+  - Component Level
+  - Workflow Level
+  - Application Level
+- Every level has different risk categories:
+  - Application Quality
+  - Safety
+  - Operations
+- Production-ready LLM systems continuously evaluate and improve all these aspects.
+
+---
+
+# 🎯 Final Thought
+
+> **A great LLM application is not built by evaluating only the final answer.**
+>
+> It is built by continuously evaluating every component, every workflow, and the entire application throughout its lifecycle.
