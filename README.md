@@ -3056,3 +3056,435 @@ Choosing the right evaluation method depends on:
 
 These three evaluation methods form the **foundation of modern production-ready LLM evaluation systems**.
 
+
+# 📚 Offline Evaluation vs Online Evaluation 
+
+> **Goal:** Understand the difference between **Offline Evaluation** and **Online Evaluation** in LLM applications, and learn why both are essential for building production-ready AI systems.
+
+---
+
+# 📖 Course Recap
+
+Before this topic, we learned:
+
+- Why LLM Evaluations are needed
+- Model-Based and Application-Based Evaluations
+- LLM Evaluation Pipelines
+- Why one application needs multiple evaluation pipelines
+- Three Evaluation Methods:
+  - Programmatic Evaluation
+  - Human Evaluation
+  - LLM-as-a-Judge
+
+---
+
+# 🏗️ What is Offline Evaluation?
+
+**Offline Evaluation** means evaluating an LLM application **before deployment**.
+
+It is performed to verify whether the application is ready for production.
+
+### Simple Definition
+
+> **Offline Evaluation = Testing Before Deployment**
+
+---
+
+## Workflow
+
+```text
+Build LLM Application
+        │
+        ▼
+Run Evaluation
+        │
+        ▼
+Fix Problems
+        │
+        ▼
+Deploy
+```
+
+Every evaluation performed **before deployment** is called **Offline Evaluation**.
+
+---
+
+# 🤔 Why Do We Need Offline Evaluation?
+
+Offline Evaluation is important for several reasons.
+
+---
+
+# 1️⃣ Pre-Release Testing
+
+Before deploying an application, we must thoroughly test it.
+
+Without testing:
+
+- Bugs may appear in production.
+- Wrong answers may reach users.
+- The application may become unsafe.
+
+Offline Evaluation helps identify and fix these issues before deployment.
+
+---
+
+# 2️⃣ Release Gate
+
+Offline Evaluation can automatically decide whether an application is ready to be deployed.
+
+### Example
+
+```text
+Evaluation Score = 96%
+Deployment Threshold = 95%
+
+✅ Deploy
+```
+
+```text
+Evaluation Score = 90%
+Deployment Threshold = 95%
+
+❌ Do NOT Deploy
+```
+
+In modern AI systems, this decision is often automated using **CI/CD pipelines**.
+
+---
+
+# 3️⃣ Compare Different Versions
+
+Offline Evaluation helps compare multiple versions of an application.
+
+Examples:
+
+- GPT vs Claude
+- Prompt A vs Prompt B
+- Embedding Model A vs Embedding Model B
+- Vector Database A vs Vector Database B
+- Different RAG Architectures
+
+Run the same evaluation on every version.
+
+Choose the version with the highest score.
+
+---
+
+# 4️⃣ Regression Testing
+
+Regression Testing ensures that new changes do not break existing functionality.
+
+### Example
+
+You improve the chatbot's tone.
+
+After the update:
+
+```text
+Refund Answers ✅ Better
+
+Pricing Answers ❌ Worse
+```
+
+This is called **Regression**.
+
+Offline Evaluation tests multiple question types to ensure that improvements in one area do not create problems in another.
+
+---
+
+# ✅ Three Benefits of Offline Evaluation
+
+- Test the application before deployment.
+- Compare multiple versions.
+- Detect regression after updates.
+
+---
+
+# ⚠️ Problems After Deployment
+
+Even after passing Offline Evaluation,
+
+real production environments introduce new challenges.
+
+---
+
+# 🚨 Risk 1: Unexpected User Inputs
+
+Real users ask unpredictable questions.
+
+Examples:
+
+- Hindi + English mixed questions
+- Incomplete questions
+- Angry messages
+- Prompt Injection attacks
+- Questions never seen during testing
+
+A Golden Dataset cannot cover every possible real-world input.
+
+---
+
+# 🚨 Risk 2: Production-Only Failures
+
+Some problems appear only when real users interact with the application.
+
+Examples:
+
+- Thousands of simultaneous users
+- High latency
+- Server overload
+- Hidden model bias
+
+These issues are difficult to reproduce during Offline Testing.
+
+---
+
+# 🚨 Risk 3: Data Drift
+
+Business data changes over time.
+
+Examples:
+
+- Course prices change.
+- Company policies change.
+- Documents are updated.
+
+The old Golden Dataset gradually becomes outdated.
+
+As a result:
+
+```text
+Offline Evaluation
+
+↓
+
+High Score ✅
+
+↓
+
+Real Users
+
+↓
+
+Poor Answers ❌
+```
+
+This phenomenon is called **Data Drift**.
+
+---
+
+# 🌐 What is Online Evaluation?
+
+**Online Evaluation** means evaluating the application **after deployment** while real users are interacting with it.
+
+### Simple Definition
+
+> **Online Evaluation = Monitoring the Application in Production**
+
+Unlike Offline Evaluation,
+
+Online Evaluation **does not have a Golden Dataset or Answer Key.**
+
+Instead,
+
+it evaluates the application using **live user interactions**.
+
+---
+
+# 📊 Offline vs Online Evaluation
+
+| Feature | Offline Evaluation | Online Evaluation |
+|----------|--------------------|-------------------|
+| **When?** | Before Deployment | After Deployment |
+| **Data** | Fixed Golden Dataset | Live User Traffic |
+| **Answer Key** | Available | Not Available |
+| **Purpose** | Test Correctness | Monitor Production |
+| **Input** | Expected Questions | Real-World Questions |
+| **Finds** | Bugs, Regression | Drift, Latency, Failures |
+| **Best For** | Testing & Version Comparison | Continuous Monitoring |
+
+---
+
+# 🎯 Correctness vs Normality
+
+This is one of the most important concepts.
+
+---
+
+## Offline Evaluation Checks Correctness
+
+It answers the question:
+
+> **"Is my application producing the correct answers?"**
+
+---
+
+## Online Evaluation Checks Normality
+
+It answers the question:
+
+> **"Is my application behaving normally in production?"**
+
+Online Evaluation often cannot determine whether an answer is correct,
+
+because there is no human answer available for brand-new user questions.
+
+Instead,
+
+it detects unusual or abnormal system behavior.
+
+---
+
+# 💡 Example: UPSC Answer Grader
+
+## Offline Evaluation
+
+Compare:
+
+```text
+Human Marks
+
+      vs
+
+LLM Marks
+```
+
+If both scores are similar,
+
+the grading system is considered accurate.
+
+---
+
+## Online Evaluation
+
+A new student submits an answer.
+
+There is **no human score available.**
+
+Therefore,
+
+correctness cannot be measured directly.
+
+Instead,
+
+the system checks whether its behavior remains normal.
+
+---
+
+### Example
+
+Normally,
+
+students receive scores between:
+
+```text
+500 – 600
+```
+
+Suddenly,
+
+most students start receiving:
+
+```text
+900 – 1000
+```
+
+This abnormal shift indicates that something is wrong.
+
+Online monitoring detects these unusual changes by observing score distributions over time.
+
+---
+
+# 📡 Signals Used in Online Evaluation
+
+Since there is no Answer Key,
+
+Online Evaluation relies on indirect signals.
+
+Common signals include:
+
+- 👍 / 👎 User Feedback
+- Escalation to a Human Agent
+- Repeated User Questions
+- Faithfulness (Answer grounded in retrieved context)
+- Latency
+- Error Rate
+- Unexpected System Behavior
+
+These signals help identify production issues.
+
+---
+
+# 📝 First Step of an Online Evaluation Pipeline: Logging
+
+The first step in every Online Evaluation Pipeline is **Logging**.
+
+Every interaction is recorded for future analysis.
+
+---
+
+## Common Information Logged
+
+- Conversation ID
+- User ID
+- Session ID
+- Timestamp
+- User Question
+- Retrieved Context (for RAG)
+- Model Response
+- Latency
+- Token Usage
+- Cost
+- Error Codes
+- User Feedback (👍 / 👎)
+- Escalation Events
+- Repeated Questions
+
+---
+
+## Common Tools
+
+Popular observability platforms such as **LangSmith** can store, monitor, and analyze these logs.
+
+---
+
+# 📋 Final Summary
+
+- **Offline Evaluation = Test the LLM before deployment.**
+- **Online Evaluation = Monitor the LLM after deployment.**
+- Offline Evaluation checks **Correctness**.
+- Online Evaluation checks **Normal Production Behavior**.
+- Offline Evaluation uses a **Golden Dataset**.
+- Online Evaluation uses **Live User Interactions**.
+- Offline Evaluation helps decide whether the application is ready to launch.
+- Online Evaluation ensures the application continues to perform well after deployment.
+
+---
+
+# ⚡ Quick Revision
+
+```text
+Offline Evaluation
+│
+├── Before Deployment
+├── Golden Dataset
+├── Correctness
+├── Version Comparison
+├── Regression Testing
+└── Release Decision
+
+
+Online Evaluation
+│
+├── After Deployment
+├── Live Users
+├── No Answer Key
+├── Monitor Production
+├── Detect Drift
+├── Detect Latency
+├── Detect Failures
+└── Logging & Monitoring
+```
+
+---
