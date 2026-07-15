@@ -1871,7 +1871,7 @@ Guardrails
 > It is built by continuously evaluating every component, every workflow, and the entire application throughout its lifecycle.
 
 
-![Project Screenshot](image4.png)
+![Project Screenshot](image7.png)
 
 # 📚 LLM Evaluation Notes 
 
