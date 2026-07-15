@@ -2464,6 +2464,9 @@ Risk Categories
 
 ---
 
+![Project Screenshot](image8.png)
+
+
 # 📚 LLM Evaluation Methods (Simple English Notes)
 
 > **Goal:** Understand how an LLM evaluation pipeline is executed and learn the three major evaluation methods used in modern production systems.
