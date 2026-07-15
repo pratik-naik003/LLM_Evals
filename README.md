@@ -865,6 +865,9 @@ Before deploying this application, we must evaluate it.
 
 ---
 
+![Project Screenshot](image3.png)
+
+
 # ✅ Step 1: Define the Task
 
 The first step is to define **what you want to evaluate**.
@@ -1284,9 +1287,7 @@ A reliable LLM application is built by repeatedly:
 
 This iterative workflow is the standard approach followed by modern AI teams to build **production-ready LLM applications**.
 
-
-![Project Screenshot](image3.png)
-
+![Project Screenshot](image5.png)
 
 # 📚 LLM Evaluations – Multiple Evaluation Pipelines 
 
