@@ -3061,6 +3061,8 @@ Choosing the right evaluation method depends on:
 These three evaluation methods form the **foundation of modern production-ready LLM evaluation systems**.
 
 
+![Project Screenshot](image9.png)
+
 # 📚 Offline Evaluation vs Online Evaluation 
 
 > **Goal:** Understand the difference between **Offline Evaluation** and **Online Evaluation** in LLM applications, and learn why both are essential for building production-ready AI systems.
@@ -3492,3 +3494,4 @@ Online Evaluation
 ```
 
 ---
+![Project Screenshot](image10.png)
