@@ -400,7 +400,7 @@ It bridges the gap between building demos and building reliable AI products used
 
 ---
 
-![Project Screenshot](image1.jpeg)
+![Project Screenshot](image1.png)
 
 
 # 📚 What are LLM Evaluations?
