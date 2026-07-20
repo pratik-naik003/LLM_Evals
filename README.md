@@ -3468,30 +3468,8 @@ Popular observability platforms such as **LangSmith** can store, monitor, and an
 
 ---
 
-# ⚡ Quick Revision
-
-```text
-Offline Evaluation
-│
-├── Before Deployment
-├── Golden Dataset
-├── Correctness
-├── Version Comparison
-├── Regression Testing
-└── Release Decision
 
 
-Online Evaluation
-│
-├── After Deployment
-├── Live Users
-├── No Answer Key
-├── Monitor Production
-├── Detect Drift
-├── Detect Latency
-├── Detect Failures
-└── Logging & Monitoring
-```
 
 ---
 ![Project Screenshot](image10.png)
